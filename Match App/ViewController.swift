@@ -8,10 +8,12 @@
 
 import UIKit
 
+// A constant I can reuse and easily just change from one place otherwise will have to change this in 2 places each time I change game time
+let gameTimeSetting: Float = 10 * 3000 // 30 seconds (0.5 min) expressed in ms
+
 class ViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
 
     @IBOutlet weak var timerLabel: UILabel!
-    
     
     @IBOutlet weak var collectionView: UICollectionView!
     
@@ -22,12 +24,16 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     var firstFlippedCardIndex:IndexPath?
     
     var timer: Timer? // it is optional now - the reason for that is we want to create the actual timer object in viewDidLoad
-    var milliseconds: Float = 10 * 3000 // 30 seconds (0.5 min) expressed in ms
+    
+    var milliseconds: Float = gameTimeSetting
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Call the getCards method of the CardModel
         cardArray = model.getCards()
+        
+        // Restart game
+        restartGame()
         
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -216,11 +222,23 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     func showAlert(_ title: String, _ message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
-        let alertAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
+        let // Add second button - my own additional feature
+        alertAction = UIAlertAction(title: "Play again!", style: .default, handler: {(action) in
+            // Respond to user selection of the action.
+            self.viewDidLoad()
+        })
         
         alert.addAction(alertAction)
         
         present(alert, animated: true, completion: nil)
+    }
+    
+    func restartGame() {
+        // Reset collectionView - so user can replay game from fresh start
+        collectionView.reloadData()
+        
+        // Restart timer
+        milliseconds = gameTimeSetting
     }
     
 }
