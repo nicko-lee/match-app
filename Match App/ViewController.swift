@@ -22,7 +22,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     var firstFlippedCardIndex:IndexPath?
     
     var timer: Timer? // it is optional now - the reason for that is we want to create the actual timer object in viewDidLoad
-    var milliseconds: Float = 10 * 1000 // 10 seconds expressed in ms
+    var milliseconds: Float = 10 * 3000 // 30 seconds (0.5 min) expressed in ms
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,7 +35,11 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         // Create timer object
         timer = Timer.scheduledTimer(timeInterval: 0.001, target: self, selector: #selector(timerElapsed), userInfo: nil, repeats: true)
         RunLoop.main.add(timer!, forMode: .common)
-        
+    }
+    
+    // This method gets called when the view is presented to the user
+    override func viewDidAppear(_ animated: Bool) {
+        SoundManager.playSound(.shuffle)
     }
 
     // MARK: - new section for Timer Methods
@@ -100,6 +104,9 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
             // Flip the card (only allowed if satisfies the above conditions)
             cell.flip()
             
+            // Play the flip sound
+            SoundManager.playSound(.flip)
+            
             // Set the flip status of the card
             card.isFlipped = true
             
@@ -131,6 +138,9 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         if cardOne.imageName == cardTwo.imageName {
             // It's a match
             
+            // Play sound
+            SoundManager.playSound(.match)
+            
             // Set the statuses of the cards
             cardOne.isMatched = true
             cardTwo.isMatched = true
@@ -144,6 +154,9 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         }
         else {
             // It's not a match
+            
+            // Play sound
+            SoundManager.playSound(.nomatch)
             
             // Set the statuses of the cards
             cardOne.isFlipped = false
