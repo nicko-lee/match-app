@@ -82,7 +82,6 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         
         // Get a CardCollectionViewCell object
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CardCell", for: indexPath) as! CardCollectionViewCell
-        
         // Get the card that the collection view is trying to display
         let card = cardArray[indexPath.row]
         
@@ -239,6 +238,9 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         
         // Restart timer
         milliseconds = gameTimeSetting
+        
+        // Play shuffle sound
+        SoundManager.playSound(.shuffle)
     }
     
 }
